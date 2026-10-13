@@ -3,25 +3,32 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    #region References
     public static GameManager Instance;
     public Text pointsText, missionText, dialogueText;
+    #endregion
 
-    public int totalBuildings = 6;
+    #region Settings
     public int tourBonus = 100;
+    #endregion
 
+    #region State
     int points;
     int buildingsVisited;
+    int totalBuildings;
     bool tourComplete;
-
     public bool LibraryReached { get; private set; }
+    #endregion
 
     void Awake()
     {
         Instance = this;
+        totalBuildings = BuildingList.Count;   // every building on the list counts toward the tour
         UpdateUI();
         UpdateMission();
     }
 
+    #region Points and dialogue
     public void AddPoints(int p) { points += p; UpdateUI(); }
 
     public void ShowDialogue(string msg)
@@ -33,13 +40,15 @@ public class GameManager : MonoBehaviour
     }
 
     void HideDialogue() { dialogueText.gameObject.SetActive(false); }
+    #endregion
 
+    #region Mission
     public void SetMission(string text)
     {
         if (missionText != null) missionText.text = text;
     }
 
-    // Called by LibraryGoal when the player walks into the dome
+    // Called by LibraryGoal when the player enters the library zone
     public void MarkLibraryReached(int bonus)
     {
         if (LibraryReached) return;
@@ -79,6 +88,7 @@ public class GameManager : MonoBehaviour
 
         SetMission(goal + "\n" + tour);
     }
+    #endregion
 
     void UpdateUI() { pointsText.text = "Points: " + points; }
 }
